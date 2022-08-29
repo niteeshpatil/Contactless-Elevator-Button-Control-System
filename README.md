@@ -5,7 +5,7 @@ https://user-images.githubusercontent.com/88622611/187029202-26b92783-efd2-4a6e-
 
 ![image](https://user-images.githubusercontent.com/88622611/187030155-43413ec1-bb5d-4089-8657-1a2c5ecb8674.png)
 
-#  Project Methodology
+#  Methodology
  - The Figure  represents the design proposed that consists of a panel of buttons
  with Infrared sensors mounted behind each button ,controller, OLED screen and a
  stepper motor.
