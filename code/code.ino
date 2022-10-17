@@ -2,11 +2,10 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <Stepper.h>
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64 
 
-#define SCREEN_WIDTH 128 // OLED display width,  in pixels
-#define SCREEN_HEIGHT 64 // OLED display height, in pixels
 
-// declare an SSD1306 display object connected to I2C
 Adafruit_SSD1306 oled(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
 
@@ -17,28 +16,26 @@ int IRSensor3= 7;
 const int stepsPerRevolution = 2038;
 const int sp=10;
 int currflore=1;
-int nextflore=1;
 
-// Creates an instance of stepper class
-// Pins entered in sequence IN1-IN3-IN2-IN4 for proper step sequence
+
 Stepper myStepper = Stepper(stepsPerRevolution, 8, 10, 9, 11);
 
 void setup() { 
   Serial.begin(9600);
 
-  // initialize OLED display with address 0x3C for 128x64
   if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
     Serial.println(F("SSD1306 allocation failed"));
     while (true);
   }
-    delay(500);         // wait for initializing
-  oled.clearDisplay(); // clear display
+    delay(500);       
+  oled.clearDisplay();
 
-  oled.setTextSize(3);          // text size
-  oled.setTextColor(WHITE);     // text color
-  oled.setCursor(0, 25);        // position to display
-  oled.println("Welcome"); // text to display
-  oled.display();               // show on OLED
+  oled.setTextSize(3);          
+  oled.setTextColor(WHITE);    
+  oled.setCursor(0, 25);       
+  oled.println("Welcome"); 
+  oled.display();
+  delay(4000);                
 
 
  pinMode (IRSensor1, INPUT);
@@ -73,84 +70,122 @@ void rotate(int currflore,int nextflore)
   }
 }
 
-void loop() { 
-  myStepper.setSpeed(sp);
- int s1 = digitalRead(IRSensor1);
- int s2 = digitalRead(IRSensor2);
- int s3 = digitalRead(IRSensor3);
-
-if((!s1&&!s2)||(!s2&&!s3)||(!s3&&!s1))
+void disp(int i)
 {
+   oled.clearDisplay(); 
 
-
-  oled.clearDisplay(); // clear display
-
-  oled.setTextSize(2);          // text size
-  oled.setTextColor(WHITE);     // text color
-  oled.setCursor(5, 20);        // position to display
-  oled.println("Try again"); // text to display
-  oled.display();               // show on 
-     delay(500);         // wait for initializing
+  oled.setTextSize(3);          
+  oled.setTextColor(WHITE);     
+  oled.setCursor(0, 25);  
+  if(i==1)     
+  oled.println("Floor 1");
+  if(i==2)
+   oled.println("Floor 2");
+  if(i==3)
+   oled.println("Floor 3");
+  oled.display(); 
+  delay(1000);
 }
 
- 
-else if (s1 == 0)
-  {
+void dispslect(int i)
+{
+   oled.clearDisplay(); 
 
-  oled.clearDisplay(); // clear display
-
-  oled.setTextSize(3);          // text size
-  oled.setTextColor(WHITE);     // text color
-  oled.setCursor(0, 25);        // position to display
-  oled.println("Floor 1"); // text to display
-  oled.display();               // show on 
-    delay(500);         // wait for initializing
-   rotate(currflore,1);
-   currflore=1;
-  }
-  
-  else if (s2 == 0)
-   {  
-
-
-  oled.clearDisplay(); // clear display
-
-  oled.setTextSize(3);          // text size
-  oled.setTextColor(WHITE);     // text color
-  oled.setCursor(0, 25);        // position to display
-  oled.println("Floor 2"); // text to display
+  oled.setTextSize(2);          
+  oled.setTextColor(WHITE);     
+  oled.setCursor(5, 20);  
+  if(i==1)     
+  oled.println("Floor 1   Selected");
+  if(i==2)
+   oled.println("Floor 2   Selected");
+  if(i==3)
+   oled.println("Floor 3   Selected");
   oled.display(); 
-    delay(500);         // wait for initializing  
-  rotate(currflore,2);
-   currflore=2;
-  }
- else if (s3 == 0)
-   {  
+  delay(2000);
+}
 
-  oled.clearDisplay(); // clear display
+void get(int *s)
+{
+    for(int i=0;i<3;i++)
+    {
+      if(s[i]==0)
+      {
+         s[i]=i+1;
+      }
+      else
+      {
+        s[i]=10;
+      }
+    }
 
-  oled.setTextSize(3);          // text size
-  oled.setTextColor(WHITE);     // text color
-  oled.setCursor(0, 25);        // position to display
-  oled.println("Floor 3"); // text to display
-  oled.display();               // show on 
-   delay(500);         // wait for initializing
- rotate(currflore,3);
- currflore=3;
-  
-  }
+    int newcur=currflore;
+    for(int i=0;i<3;i++)
+    {
+      if(s[i]!=10 && s[i]>currflore && s[i]!=currflore)
+      {
+        disp(s[i]);
+        rotate(newcur,s[i]);
+        newcur=s[i];
+        s[i]=10;
+      }
+    }
 
-  else
+    for(int i=2;i>=0;i--)
+    {
+      if(s[i]!=10 && s[i]!=currflore)
+      {
+        disp(s[i]);
+        rotate(newcur,s[i]);
+        newcur=s[i];
+      }
+    }
+  currflore=newcur; 
+}
+
+void select(int i,int *s,int *b)
+{
+      if(s[i]!=0)
+    {
+      if(i==0)
+      s[i]=digitalRead(IRSensor1);
+      if(i==1)
+      s[i]=digitalRead(IRSensor2);
+      if(i==2)
+      s[i]=digitalRead(IRSensor3);
+      if(s[i]==0 && b[i]==0)
+      {
+        dispslect(i+1);
+        b[i]=1;
+      }
+    }
+}
+void loop() { 
+  myStepper.setSpeed(sp);
+  int s[3];
+  int b[3]={0,0,0};
+  for(int i=0;i<200;i++)
   {
-  oled.clearDisplay(); // clear display
-
-  oled.setTextSize(2);          // text size
-  oled.setTextColor(WHITE);     // text color
-  oled.setCursor(5  ,20);        // position to display
-  oled.println("Select         Floor"); // text to display
-  oled.display();               // show on 
-    delay(500);         // wait for initializing
-  
+     for(int j=0;j<3;j++)
+     {
+      select(j,s,b);
+     }
   }
+
+  
+if(s[0]==0 or s[1]==0 or s[2]==0)
+{
+  get(s);    
+}
+else
+{
+  oled.clearDisplay(); 
+
+  oled.setTextSize(2);          
+  oled.setTextColor(WHITE);    
+  oled.setCursor(5  ,20);        
+  oled.println("Select         Floor"); 
+  oled.display();               
+    delay(2000);         
+}
    
 }
