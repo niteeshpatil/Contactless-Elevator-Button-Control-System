@@ -1,11 +1,11 @@
 # Contactless-Elevator-Button-Control-System
-
-
 https://user-images.githubusercontent.com/88622611/187029202-26b92783-efd2-4a6e-ae7f-4f7cdf1be8f7.mp4
 
-![image](https://user-images.githubusercontent.com/88622611/187030155-43413ec1-bb5d-4089-8657-1a2c5ecb8674.png)
+# Award
+![hardwar](https://github.com/user-attachments/assets/d3c3e30a-0618-416f-a980-45e3869ce45b)
 
 #  Methodology
+ ![image](https://user-images.githubusercontent.com/88622611/187030155-43413ec1-bb5d-4089-8657-1a2c5ecb8674.png)
  - The Figure  represents the design proposed that consists of a panel of buttons
  with Infrared sensors mounted behind each button ,controller, OLED screen and a
  stepper motor.
