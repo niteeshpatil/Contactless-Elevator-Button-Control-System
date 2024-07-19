@@ -20,7 +20,7 @@ the designated floor.
 resets the input and commands user to try again and the same is displayed on the
 OLED screen.
 
-# To achieve the above operation we have used -
+# To achieve the above operation we have used 
  - Arduino IDE
  - Embedded C
  
