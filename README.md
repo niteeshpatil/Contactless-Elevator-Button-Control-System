@@ -1,4 +1,6 @@
 # Contactless-Elevator-Button-Control-System
+- In COVID-19 situations, viruses can easily spread through elevator buttons. To prevent disease spread, designed contactless elevator buttons along with the elevator model.
+
 https://user-images.githubusercontent.com/88622611/187029202-26b92783-efd2-4a6e-ae7f-4f7cdf1be8f7.mp4
 
 # Award
